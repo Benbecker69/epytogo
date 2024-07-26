@@ -16,7 +16,7 @@ export default function CustomizedInputBase() {
             <SearchIcon sx={{p: '10px'}}/>
             <InputBase
                 sx={{ml: 1, flex: 1}}
-                placeholder="Des points d'intêrets, des éléments historiques... "
+                placeholder="Des sites à visiter, des éléments historiques... "
             />
             <IconButton sx={{p: '10px'}} aria-label="directions">
                 <GpsFixedIcon/>

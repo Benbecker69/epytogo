@@ -1,0 +1,78 @@
+.root {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 415px;
+  overflow: hidden;
+  margin-bottom: 30px;
+  border-radius: 20px;
+  box-shadow: 0px 10px 13px -7px #000000, 4px 5px 15px 5px rgba(0,0,0,0);
+
+  .slide {
+    object-fit: cover;
+    width: 100%;
+    height: auto;
+  }
+
+  p {
+    position: absolute;
+    bottom: 20px;
+    color: #ffffff;
+    font-variant-numeric: tabular-nums;
+    font-size: 15px;
+    font-weight: bold;
+    font-family: 'Arial', serif;
+  }
+  @media screen and (min-width: 300px) and (max-width: 700px){
+    margin-bottom: 15px;
+    height: 255px;
+    border-radius: 10px;
+    .slide {
+      height: 100%;
+    }
+    p {
+      display: none;
+    }
+  }
+}
+
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  svg {
+    width: 50px;
+    height: 80px;
+  }
+
+  &.prev {
+    left: 25px;
+  }
+
+  &.next {
+    right: 25px;
+  }
+  &:hover {
+    transform: translateY(-50%) scale(1.1);
+  }
+   @media screen and (min-width: 300px) and (max-width: 700px) {
+    svg {
+      width: 10px;
+      height: 20px;
+    }
+    &.prev {
+      left: 0px;
+    }
+    &.next {
+      right: 0px;
+    }
+  }
+}
