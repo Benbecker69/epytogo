@@ -1,0 +1,37 @@
+.root {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 40px 5%;
+  img {
+    height: 140px;
+  }
+  nav {
+    justify-content: flex-end;
+    display: flex;
+    font-size: 24px;
+
+    a {
+      margin-left: 60px;
+      white-space: nowrap;
+      color: #E8BEA1;
+      font-family: Arial, serif;
+    }
+  }
+
+  @media screen and (min-width: 300px) and (max-width: 700px) {
+    margin: 20px 5%;
+
+    img {
+      height: 45px;
+    }
+    nav {
+      font-size: 12px;
+
+      a {
+        margin-left: 10px;
+        text-transform: uppercase;
+      }
+    }
+  }
+}
