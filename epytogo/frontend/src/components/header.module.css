@@ -2,7 +2,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 40px 5%;
+  padding: 40px 5%;
+  background-color: #F5F5F5;
   img {
     height: 140px;
   }

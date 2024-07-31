@@ -12,7 +12,6 @@ const Footer = () => {
             fontSize: '14px',
             position: 'relative',
             bottom: '0',
-            marginTop: '100px'
         }}>
             <img src={logo} alt="Logo" style={{width: '150px'}}/>
             <p>Copyright &copy; {new Date().getFullYear()} Epytogo - Tous droits réservés.</p>

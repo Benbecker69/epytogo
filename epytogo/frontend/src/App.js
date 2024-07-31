@@ -1,11 +1,15 @@
 import React from 'react';
-import Home from './components/HomePage/Home';
 import './App.css';
+import AppRoutes from "./routes";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
 
 function App() {
     return (
         <div className="App">
-            <Home />
+            <Header/>
+            <AppRoutes />
+            <Footer />
         </div>
     );
 }
