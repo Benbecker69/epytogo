@@ -1,0 +1,48 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  background-color: #F5F5F5;
+  padding-bottom: 5%;
+}
+
+.root h1 {
+  font-size: 200px;
+  font-weight: 700;
+  margin: 30px 0;
+  color: #EC8E7B;
+  font-family: Papyrus, serif;
+}
+
+.root p {
+  font-size: 30px;
+  margin-bottom: 30px;
+  text-align: center;
+  max-width: 90%;
+  color: #EAC0A1;
+  font-family: Arial, serif;
+}
+
+.root span {
+  font-size: 18px;
+  text-decoration-line: underline;
+  margin-bottom: 50px;
+  color: #EC8E7B;
+  font-family: Arial, serif;
+}
+
+@media screen and (min-width: 300px) and (max-width: 700px) {
+  .root h1 {
+    font-size: 96px;
+    color: #EAC0A1;
+  }
+  .root p {
+    font-size: 18px;
+    color: #EAC0A1;
+  }
+  .root span {
+    font-size: 14px;
+    color: #EAC0A1;
+  }
+}
