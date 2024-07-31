@@ -1,7 +1,5 @@
 import React from 'react';
 import SearchBar from '../SearchBar';
-import { Link } from 'react-router-dom';
-import logo from '../../assets/images/logo.png';
 import CarouselHome from "../Carrousel/CarouselHome";
 import sphinx_of_gizeh from '../../assets/images/le_sphinx_de_gizeh.jpg';
 import pyramid_of_gizeh from '../../assets/images/pyramid_of_gizeh.PNG';

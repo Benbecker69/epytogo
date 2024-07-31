@@ -1,52 +1,65 @@
 .root,
 .root_half {
-  margin-bottom: 5%;
+  margin: 0 auto 5%;
   font-size: 24px;
   line-height: 34px;
-  .title {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: green;
-    color: #ffffff;
-    height: 50px;
-    padding: 0 20px;
-    border-radius: 10px;
+  width: 80%;
+}
 
-    .arrow {
-      height: 30px;
-      transition: transform 0.2s ease-in-out;
-    }
-    .arrow_open {
-      transform: rotate(180deg);
-      transition: transform 0.2s ease-in-out;
-    }
-  }
-  .content {
-    padding: 40px 20px 20px 20px;
-    background-color: orange;
-    border-radius: 0 0 10px 10px;
-    position: relative;
-    top: -10px;
-    z-index: -1;
-  }
-  @media screen and (min-width: 300px) and (max-width: 700px){
-    .title {
-      font-size: 13px;
-      height: 30px;
-      border-radius: 5px;
-      padding: 0 10px;
+.root .title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #EC8E7B;
+  color: gold;
+  font-weight: bold;
+  font-family: Papyrus, serif;
+  height: 50px;
+  padding: 0 20px;
+  border-radius: 10px;
+}
 
-      .arrow, .arrow_open{
-        height: 10px;
-      }
-    }
-    .content{
-      padding: 25px 10px 5px 10px;
-      font-size: 12px;
-      line-height: 17px;
-      min-height: 150px;
-    }
+.root .arrow {
+  height: 30px;
+  transition: transform 0.2s ease-in-out;
+}
+
+.root .arrow_open {
+  transform: rotate(180deg);
+  transition: transform 0.2s ease-in-out;
+}
+
+.root .content {
+  padding: 40px 20px 20px 20px;
+  background-color: #F5F5F5;
+  border-radius: 0 0 10px 10px;
+  position: relative;
+  top: -10px;
+  z-index: -1;
+  color: #EC8E7B;
+  font-family: Arial, serif;
+  text-align: left;
+  font-size: 22px;
+}
+
+@media screen and (min-width: 300px) and (max-width: 700px) {
+  .root .title {
+    font-size: 13px;
+    height: 30px;
+    border-radius: 5px;
+    padding: 0 10px;
+  }
+
+  .root .arrow,
+  .root .arrow_open {
+    height: 10px;
+  }
+
+  .root .content {
+    padding: 25px 10px 5px 10px;
+    font-size: 12px;
+    line-height: 17px;
+    min-height: 150px;
   }
 }
 
@@ -54,10 +67,11 @@
   width: 45%;
   font-size: 18px;
   line-height: 26px;
-  @media screen and (min-width: 300px) and (max-width: 700px){
-    width: 100%;
-  }
-  @media screen and (min-width: 300px) and (max-width: 700px) {
+  margin: 0 auto;
+}
+
+@media screen and (min-width: 300px) and (max-width: 700px) {
+  .root_half {
     width: 100%;
   }
 }
