@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styles from "./Carrousel.module.css";
-import { ReactComponent as ArrowLeft } from "../../assets/images/arrow-left.svg";
-import { ReactComponent as ArrowRight } from "../../assets/images/arrow-right.svg";
+import { ReactComponent as ArrowLeft } from "../../assets/images/svg/arrow-left.svg";
+import { ReactComponent as ArrowRight } from "../../assets/images/svg/arrow-right.svg";
 
 const Carrousel = (props) => {
   const { images } = props;

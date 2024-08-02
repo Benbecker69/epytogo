@@ -1,5 +1,5 @@
 import React from "react";
-import BannerArticles from "../BannerArticles/BannerArticles";
+import BannerArticles from "./BannerArticles/BannerArticles";
 
 const Articles = () => {
     return (

@@ -1,7 +1,7 @@
 import React from "react";
-import styles from "./header.module.css";
-import Nav from "./Nav"
-import logo from '../assets/images/logo.png';
+import styles from "./Reader.module.css";
+import Nav from "../Nav/Nav"
+import logo from '../../../assets/images/png/logo.png';
 
 const Header = () => {
   return (

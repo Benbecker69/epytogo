@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./BannerArticles.module.css";
-import pharaohsImage from "../../assets/images/pharaohs-banner-articles-page.jpg";
+import pharaohsImage from "../../../assets/images/jpg/pharaohs-banner-articles-page.jpg";
 
 const BannerArticles = () => {
     return (
