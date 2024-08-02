@@ -1,8 +1,11 @@
 import React from "react";
+import BannerArticles from "../BannerArticles/BannerArticles";
 
 const Articles = () => {
     return (
-        <h1>Articles Page</h1>
+       <div>
+           <BannerArticles/>
+       </div>
     );
 };
 
