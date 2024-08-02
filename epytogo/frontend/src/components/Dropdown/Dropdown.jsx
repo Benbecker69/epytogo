@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styles from "./Dropdown.module.css";
-import { ReactComponent as ArrowDown } from "../../assets/images/arrow-down.svg";
+import { ReactComponent as ArrowDown } from "../../assets/images/svg/arrow-down.svg";
 
 const Dropdown = ({ title, content, halfSize = false }) => {
   const [isOpen, setIsOpen] = useState(true);

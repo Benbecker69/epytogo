@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./BannerHome.module.css";
-import pyramidImage from "../../assets/images/pyramid_home_page.PNG";
+import pyramidImage from "../../../assets/images/png/pyramid-home-page.PNG";
 
 const BannerHome = () => {
     return (

@@ -1,6 +1,6 @@
 import React from "react";
-import Dropdown from "../Dropdown/Dropdown";
-import BannerAbout from "../../components/AboutPage/BannerAboutPage/BannerAboutPage";
+import Dropdown from "../../components/Dropdown/Dropdown";
+import BannerAbout from "./BannerAboutPage/BannerAboutPage";
 
 const dropdownTexts = [
     {
