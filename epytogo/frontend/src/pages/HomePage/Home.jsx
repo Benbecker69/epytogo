@@ -7,6 +7,7 @@ import museum_of_caire from '../../assets/images/jpg/museum-caire.jpg';
 import temples_of_karnak from '../../assets/images/jpg/temple-karnak.jpg';
 import BannerHome from "./BannerHome/BannerHome";
 import styles from './HomePage.module.css';
+import FormUser from "../../components/FormUser/FormUser";
 
 const Home = () => {
     const images = [
@@ -17,6 +18,7 @@ const Home = () => {
     ];
     return (
         <div className={styles.root}>
+            <div><FormUser/></div>
             <div className={styles.header}></div>
             <h1 className={styles.title}>EPYTOGO</h1>
             <h2 className={styles.subtitle}>Où voulez-vous allez ?</h2>

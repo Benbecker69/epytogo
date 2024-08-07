@@ -1,0 +1,15 @@
+.searchButtonBar {
+    font-family: Arial, serif !important;
+    color: #54F98D !important;
+    position: relative;
+    margin-bottom: 10px !important;
+}
+
+.highlighted::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -2px;
+    border-bottom: 3px solid #E8BC88;
+}

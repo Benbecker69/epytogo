@@ -7,7 +7,7 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import GpsFixedIcon from '@mui/icons-material/GpsFixed';
 
-export default function CustomizedInputBase() {
+export default function SearchBar() {
     return (
         <Paper style={{borderRadius: "20px"}}
                component="form"
