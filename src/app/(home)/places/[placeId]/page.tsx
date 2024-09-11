@@ -4,10 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Service } from "@/services/Service";
 import { PlaceResult } from "@/services/ServiceInterface";
 import { useStore } from "@/store/useStore";
-import { Edit, Heart, HeartOff } from "lucide-react";
+import { Edit } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 
 export default function Page({ params }: { params: { placeId: string } }) {
   const { placeId } = params;
@@ -18,13 +18,10 @@ export default function Page({ params }: { params: { placeId: string } }) {
   const [rating, setRating] = useState<number>(0);
   const [comment, setComment] = useState<string>("");
   const [reviews, setReviews] = useState<any[]>([]);
-  const [isFavorite, setIsFavorite] = useState<boolean>(false);
   const [editingReviewId, setEditingReviewId] = useState<string | null>(null);
 
   const { data: session } = useSession();
   const { currentUser, setCurrentUser } = useStore();
-
-  console.log(isFavorite);
 
   const service = useMemo(
     () => new Service("https://places.googleapis.com", "POST"),
@@ -64,47 +61,13 @@ export default function Page({ params }: { params: { placeId: string } }) {
     }
   };
 
-  const checkIfFavorite = useCallback(async () => {
-    try {
-      const response = await fetch(`/api/favorites/${placeId}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userId: currentUser?.id,
-          placeName: placeDetails?.displayName.text,
-          address: placeDetails?.formattedAddress,
-          photo: placeDetails?.photos && placeDetails?.photos.length > 0 ? placeDetails?.photos[0].name : null,
-        }),
-      });
-
-      const result = await response.json();
-
-      console.log(result);
-
-      if (result.message === "Favorite deleted successfully") {
-        setIsFavorite(false);
-      } else {
-        setIsFavorite(true);
-      }
-    } catch (error) {
-      console.error("Erreur lors de la gestion des favoris :", error);
-    }
-  }, [currentUser, placeId]);
-
   useEffect(() => {
     if (session?.user) {
       setCurrentUser(session.user);
       fetchPlaceDetails();
       fetchReviews();
-      checkIfFavorite();
     }
   }, [session]);
-
-  const handleFavorite = async () => {
-    await checkIfFavorite();
-  };
 
   const handleSubmitReview = async (e: FormEvent) => {
     e.preventDefault();
@@ -230,17 +193,6 @@ export default function Page({ params }: { params: { placeId: string } }) {
             {renderOpeningHours(placeDetails.currentOpeningHours)}
           </div>
         </div>
-        <Button onClick={handleFavorite} className="mt-4">
-          {isFavorite ? (
-            <>
-              <HeartOff className="mr-2" /> Retirer des favoris
-            </>
-          ) : (
-            <>
-              <Heart className="mr-2" /> Ajouter aux favoris
-            </>
-          )}
-        </Button>
       </div>
 
       <div className="w-full max-w-4xl p-8 bg-white shadow-lg rounded-lg">

@@ -55,16 +55,6 @@ export const useNavigation = () => {
       },
     },
     {
-      id: "favorite",
-      name: "Favoris",
-      tooltip: true,
-      icon: <Star size={20} />,
-      handleClick: () => {
-        setItem("favorite");
-        router.push("/favorites");
-      },
-    },
-    {
       id: "profile",
       name: "Profil",
       tooltip: true,
