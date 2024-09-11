@@ -1,21 +1,52 @@
+export interface PlaceResult {
+  id: string;
+  displayName: {
+    text: string;
+    languageCode: string;
+  };
+  formattedAddress: string;
+  internationalPhoneNumber: string;
+  currentOpeningHours: {
+    openNow: boolean;
+    periods: Array<{
+      open: {
+        date: { year: number; month: number; day: number };
+        day: number;
+        hour: number;
+        minute: number;
+      };
+      close: {
+        date: { year: number; month: number; day: number };
+        day: number;
+        hour: number;
+        minute: number;
+      };
+    }>;
+    weekdayDescriptions: Array<string>;
+  };
+  location: {
+    latitude: number;
+    longitude: number;
+  };
+  rating?: number;
+  photos?: Array<{
+    name: string;
+    authorAttributions: Array<{
+      displayName: string;
+      photoUri: string;
+      uri: string;
+    }>;
+  }>;
+}
+
 export interface ServiceInterface {
-  // * Recherche des restaurants en fonction d'un identifiant de lieu (location_id).
-  searchRestaurantsByLocationId({
-    location_id,
-  }: {
-    location_id: string;
-  }): Promise<unknown[]>;
-
-  //  * Recherche des restaurants dans une ville donnée.
-  searchRestaurantsByCity({ city }: { city: string }): Promise<unknown[]>;
-
-  //  * Recherche des hôtels en fonction de la latitude et de la longitude, avec pagination.
-  searchHotels({
-    lat,
-    long,
-  }: {
-    lat: string;
-    long: string;
-    page: number;
-  }): Promise<unknown[]>;
+  searchByText(params: {
+    query: string;
+    type: string;
+    name?: string;
+  }): Promise<PlaceResult[]>;
+  searchRestaurants(params: { name: string }): Promise<PlaceResult[]>;
+  searchHotels(params: { name: string }): Promise<PlaceResult[]>;
+  searchRestaurantsAndHotels(params: { name: string }): Promise<PlaceResult[]>;
+  searchById(params: { placeId: string }): Promise<PlaceResult>;
 }

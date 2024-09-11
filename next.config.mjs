@@ -5,6 +5,7 @@ const nextConfig = {
       "dynamic-media-cdn.tripadvisor.com",
       "images.unsplash.com",
       "plus.unsplash.com",
+      "places.googleapis.com"
     ],
   },
 };

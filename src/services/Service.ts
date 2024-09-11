@@ -1,95 +1,110 @@
-import { ServiceInterface } from "./ServiceInterface";
+import { PlaceResult, ServiceInterface } from "./ServiceInterface";
 
 type Method = "GET" | "POST" | "PUT" | "DELETE";
 
 export class Service implements ServiceInterface {
-  apiKey = process.env.VITE_API_KEY;
-  apiKeyGeo = process.env.VITE_API_KEY_GEO;
+  apiKey = process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY;
 
-  constructor(
-    public baseUrl: string,
-    public method: Method,
-  ) {
+  constructor(public baseUrl: string, public method: Method) {
     this.baseUrl = baseUrl;
     this.method = method;
   }
 
-  async searchRestaurantsByLocationId({
-    location_id,
+  async searchByText({
+    query,
+    type,
+    name = "",
   }: {
-    location_id: string;
-  }): Promise<unknown[]> {
-    const options = {
-      method: this.method,
+    query: string;
+    type: string;
+    name?: string;
+  }): Promise<PlaceResult[]> {
+    let textQuery = `${type} in ${query}`;
+
+    if (name) {
+      textQuery = `${name} ${type} in ${query}`;
+    }
+
+    const url = `${this.baseUrl}/v1/places:searchText`;
+    const body = JSON.stringify({
+      textQuery,
+      includedType: type,
+    });
+
+    const response = await fetch(url, {
+      method: "POST",
+      // @ts-ignore
       headers: {
-        "X-RapidAPI-Key": this.apiKey,
-        "X-RapidAPI-Host": "tripadvisor16.p.rapidapi.com",
+        "Content-Type": "application/json",
+        "X-Goog-Api-Key": this.apiKey,
+        "X-Goog-FieldMask":
+          "places.displayName,places.formattedAddress,places.location,places.rating,places.photos,places.currentOpeningHours,places.internationalPhoneNumber,places.id",
       },
-    };
+      body: body,
+    });
 
-    const response = await fetch(
-      `${this.baseUrl}/restaurant/searchRestaurants?locationId=${location_id}`,
-      options,
-    );
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
     const result = await response.json();
-
-    return result.data.data;
+    return result.places;
   }
 
-  async searchRestaurantsByCity({
-    city,
+  async searchRestaurants({
+    name = "",
   }: {
-    city: string;
-  }): Promise<unknown[]> {
-    const options = {
-      method: this.method,
-      headers: {
-        "X-RapidAPI-Key": this.apiKey,
-        "X-RapidAPI-Host": "tripadvisor16.p.rapidapi.com",
-      },
-    };
-
-    const response = await fetch(
-      `${this.baseUrl}/restaurant/searchLocation?query=${city}`,
-      options,
-    );
-    const result = await response.json();
-
-    return result.data.data;
+    name?: string;
+  }): Promise<PlaceResult[]> {
+    return this.searchByText({
+      query: "Egypt",
+      type: "restaurant",
+      name,
+    });
   }
 
-  async searchHotels({
-    lat,
-    long,
-    page,
-  }: {
-    lat: string;
-    long: string;
-    page: number;
-  }): Promise<unknown[]> {
-    const options = {
-      method: this.method,
-      headers: {
-        "X-RapidAPI-Key": this.apiKey,
-        "X-RapidAPI-Host": "tripadvisor16.p.rapidapi.com",
-      },
-    };
-
-    const response = await fetch(
-      `${this.baseUrl}/hotels/searchHotelsByLocation?latitude=${lat}&longitude=${long}&pageNumber=${page}`,
-      options,
-    );
-    const result = await response.json();
-
-    return result.data.data;
+  async searchHotels({ name = "" }: { name?: string }): Promise<PlaceResult[]> {
+    return this.searchByText({
+      query: "Egypt",
+      type: "lodging",
+      name,
+    });
   }
 
-  async searchGeo({ address }: { address: string }): Promise<unknown[]> {
-    const response = await fetch(
-      `${this.baseUrl}?address=${address}&key=${this.apiKeyGeo}`,
-    );
-    const result = await response.json();
+  async searchRestaurantsAndHotels({
+    name = "",
+  }: {
+    name?: string;
+  }): Promise<PlaceResult[]> {
+    const restaurants = await this.searchRestaurants({
+      name,
+    });
 
-    return result.results;
+    const hotels = await this.searchHotels({
+      name,
+    });
+
+    return [...restaurants, ...hotels];
+  }
+
+  async searchById({ placeId }: { placeId: string }): Promise<PlaceResult> {
+    const url = `${this.baseUrl}/v1/places/${placeId}`;
+    const response = await fetch(url, {
+      method: "GET",
+      // @ts-ignore
+      headers: {
+        "Content-Type": "application/json",
+        "X-Goog-Api-Key": this.apiKey, 
+        "X-Goog-FieldMask":
+          "id,displayName,photos,formattedAddress,rating,internationalPhoneNumber,currentOpeningHours",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const result = await response.json();
+    return result;
   }
 }

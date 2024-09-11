@@ -1,3 +1,6 @@
+import { NavItem } from "@/components/navigation/types";
+import { Profile } from "@/components/Profile";
+import { useStore } from "@/store/useStore";
 import {
   BedSingle,
   HomeIcon,
@@ -6,13 +9,12 @@ import {
   User,
   UtensilsCrossed,
 } from "lucide-react";
-
-import { useStore } from "@/store/useStore";
-import { NavItem } from "@/components/navigation/types";
-import { Profile } from "@/components/Profile";
 import { signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
+
 export const useNavigation = () => {
   const { setItem } = useStore();
+  const router = useRouter();
 
   const navItemsHomePage: NavItem[] = [
     {
@@ -49,6 +51,7 @@ export const useNavigation = () => {
       icon: <HomeIcon size={20} />,
       handleClick: () => {
         setItem("home");
+        router.push("/");
       },
     },
     {
