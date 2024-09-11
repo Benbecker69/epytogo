@@ -1,9 +1,9 @@
 "use client";
 
-import { PlaceResult } from "@/services/ServiceInterface";
-import { useEffect, useMemo, useState } from "react";
 import { Service } from "@/services/Service";
+import { PlaceResult } from "@/services/ServiceInterface";
 import Image from "next/image";
+import { useEffect, useMemo, useState } from "react";
 
 export default function Page({ params }: { params: { placeId: string } }) {
   const { placeId } = params;

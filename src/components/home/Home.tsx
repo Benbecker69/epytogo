@@ -9,10 +9,10 @@ import { Service } from "@/services/Service";
 import { PlaceResult } from "@/services/ServiceInterface";
 import { useStore } from "@/store/useStore";
 import { Search } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { CustomCard } from "./CustomCard";
 import { SkeletonCard } from "./SkeletonCard";
-import { useRouter } from "next/navigation";
 
 export const Home = () => {
   const { navItemsHomePage } = useNavigation();
