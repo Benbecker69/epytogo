@@ -72,7 +72,7 @@ export const Home = () => {
         <Navigation navItems={navItemsHomePage} />
         <form className="relative mt-4 flex w-full" onSubmit={handleSubmit}>
           <input
-            className="h-11 w-full rounded-full border border-sky-600 px-10 pr-20 outline-none"
+            className="h-11 w-full rounded-full border border-[#fed34f] px-10 pr-20 outline-none"
             name="search"
             placeholder="Rechercher un endroit..."
             type="text"

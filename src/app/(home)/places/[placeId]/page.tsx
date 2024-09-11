@@ -1,9 +1,13 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { Service } from "@/services/Service";
 import { PlaceResult } from "@/services/ServiceInterface";
+import { useStore } from "@/store/useStore";
+import { Edit, Heart, HeartOff } from "lucide-react";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 
 export default function Page({ params }: { params: { placeId: string } }) {
   const { placeId } = params;
@@ -11,6 +15,16 @@ export default function Page({ params }: { params: { placeId: string } }) {
   const [placeDetails, setPlaceDetails] = useState<PlaceResult | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [rating, setRating] = useState<number>(0);
+  const [comment, setComment] = useState<string>("");
+  const [reviews, setReviews] = useState<any[]>([]);
+  const [isFavorite, setIsFavorite] = useState<boolean>(false);
+  const [editingReviewId, setEditingReviewId] = useState<string | null>(null);
+
+  const { data: session } = useSession();
+  const { currentUser, setCurrentUser } = useStore();
+
+  console.log(isFavorite);
 
   const service = useMemo(
     () => new Service("https://places.googleapis.com", "POST"),
@@ -30,7 +44,6 @@ export default function Page({ params }: { params: { placeId: string } }) {
 
       if (results) {
         setPlaceDetails(results);
-        console.log(results);
       } else {
         setError("Aucun détail trouvé pour cet endroit.");
       }
@@ -41,8 +54,92 @@ export default function Page({ params }: { params: { placeId: string } }) {
     }
   };
 
+  const fetchReviews = async () => {
+    try {
+      const response = await fetch(`/api/reviews/${placeId}`);
+      const data = await response.json();
+      setReviews(data);
+    } catch (error) {
+      console.error("Erreur lors de la récupération des avis :", error);
+    }
+  };
+
+  const checkIfFavorite = useCallback(async () => {
+    try {
+      const response = await fetch(`/api/favorites/${placeId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: currentUser?.id,
+          placeName: placeDetails?.displayName.text,
+          address: placeDetails?.formattedAddress,
+          photo: placeDetails?.photos && placeDetails?.photos.length > 0 ? placeDetails?.photos[0].name : null,
+        }),
+      });
+
+      const result = await response.json();
+
+      console.log(result);
+
+      if (result.message === "Favorite deleted successfully") {
+        setIsFavorite(false);
+      } else {
+        setIsFavorite(true);
+      }
+    } catch (error) {
+      console.error("Erreur lors de la gestion des favoris :", error);
+    }
+  }, [currentUser, placeId]);
+
+  useEffect(() => {
+    if (session?.user) {
+      setCurrentUser(session.user);
+      fetchPlaceDetails();
+      fetchReviews();
+      checkIfFavorite();
+    }
+  }, [session]);
+
+  const handleFavorite = async () => {
+    await checkIfFavorite();
+  };
+
+  const handleSubmitReview = async (e: FormEvent) => {
+    e.preventDefault();
+
+    const response = await fetch(`/api/reviews/${placeId}`, {
+      method: editingReviewId ? "PUT" : "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId: currentUser?.id,
+        rating,
+        comment,
+      }),
+    });
+
+    if (response.ok) {
+      setRating(0);
+      setComment("");
+      setEditingReviewId(null);
+      fetchReviews();
+    } else {
+      console.error("Erreur lors de la soumission du commentaire :", response);
+    }
+  };
+
+  const handleEditReview = (review: any) => {
+    setRating(review.rating);
+    setComment(review.comment);
+    setEditingReviewId(review.id);
+  };
+
   useEffect(() => {
     fetchPlaceDetails();
+    fetchReviews();
   }, [placeId]);
 
   const formatTime = (hour: number, minute: number) => {
@@ -97,7 +194,7 @@ export default function Page({ params }: { params: { placeId: string } }) {
   }
 
   return (
-    <div className="flex justify-center mt-12">
+    <div className="flex flex-col items-center mt-12 space-y-6">
       <div className="w-full max-w-4xl p-8 bg-white shadow-lg rounded-lg">
         <h2 className="text-3xl font-bold mb-6 text-center">
           {placeDetails.displayName.text}
@@ -127,11 +224,99 @@ export default function Page({ params }: { params: { placeId: string } }) {
             <strong>Numéro de téléphone :</strong>{" "}
             {placeDetails.internationalPhoneNumber || "Non disponible"}
           </p>
+
           <div>
             <strong>Horaires d&apos;ouverture :</strong>{" "}
             {renderOpeningHours(placeDetails.currentOpeningHours)}
           </div>
         </div>
+        <Button onClick={handleFavorite} className="mt-4">
+          {isFavorite ? (
+            <>
+              <HeartOff className="mr-2" /> Retirer des favoris
+            </>
+          ) : (
+            <>
+              <Heart className="mr-2" /> Ajouter aux favoris
+            </>
+          )}
+        </Button>
+      </div>
+
+      <div className="w-full max-w-4xl p-8 bg-white shadow-lg rounded-lg">
+        <h3 className="text-2xl font-bold mb-4">Avis</h3>
+        {reviews.length === 0 ? (
+          <p className="text-gray-500">Aucun avis pour cet endroit.</p>
+        ) : (
+          <ul className="space-y-4">
+            {reviews.map((review, index) => (
+              <li key={index} className="border-b pb-4 flex items-start gap-4">
+                {review.user.image && (
+                  <Image
+                    src={review.user.image}
+                    alt={`${review.user.firstname} ${review.user.lastname}`}
+                    className="w-12 h-12 rounded-full object-cover"
+                  />
+                )}
+                <div>
+                  <p className="font-bold">
+                    {review.user.firstname} {review.user.lastname}
+                  </p>
+                  <p>
+                    <strong>Note :</strong> {review.rating} / 5
+                  </p>
+                  <p>{review.comment}</p>
+
+                  {currentUser?.id === review.userId && (
+                    <Button
+                      onClick={() => handleEditReview(review)}
+                      className="flex items-center"
+                    >
+                      <Edit className="mr-2" /> Modifier
+                    </Button>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      <div className="w-full max-w-4xl p-8 bg-white shadow-lg rounded-lg">
+        <h3 className="text-2xl font-bold mb-4">
+          {editingReviewId ? "Modifier votre avis" : "Ajouter un avis"}
+        </h3>
+        <form onSubmit={handleSubmitReview} className="space-y-4">
+          <div>
+            <label htmlFor="rating" className="block font-semibold mb-2">
+              Note (1 à 5) :
+            </label>
+            <input
+              type="number"
+              id="rating"
+              value={rating}
+              onChange={(e) => setRating(Number(e.target.value))}
+              min="1"
+              max="5"
+              className="w-full p-2 border border-gray-300 rounded-md"
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="comment" className="block font-semibold mb-2">
+              Commentaire :
+            </label>
+            <textarea
+              id="comment"
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded-md"
+              rows={4}
+              required
+            ></textarea>
+          </div>
+          <Button type="submit">Envoyer</Button>
+        </form>
       </div>
     </div>
   );

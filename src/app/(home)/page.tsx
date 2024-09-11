@@ -1,4 +1,5 @@
 "use client";
+
 import { Home } from "@/components/home/Home";
 import { useStore } from "@/store/useStore";
 import { useSession } from "next-auth/react";

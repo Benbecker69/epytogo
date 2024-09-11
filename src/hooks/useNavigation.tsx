@@ -61,6 +61,7 @@ export const useNavigation = () => {
       icon: <Star size={20} />,
       handleClick: () => {
         setItem("favorite");
+        router.push("/favorites");
       },
     },
     {
