@@ -3,7 +3,7 @@ import { PlaceResult, ServiceInterface } from "./ServiceInterface";
 type Method = "GET" | "POST" | "PUT" | "DELETE";
 
 export class Service implements ServiceInterface {
-  apiKey = process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY;
+  apiKey = process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY ?? "";
 
   constructor(public baseUrl: string, public method: Method) {
     this.baseUrl = baseUrl;
@@ -31,15 +31,17 @@ export class Service implements ServiceInterface {
       includedType: type,
     });
 
+    const requestHeaders = new Headers();
+    requestHeaders.set("Content-Type", "application/json");
+    requestHeaders.set("X-Goog-Api-Key", this.apiKey);
+    requestHeaders.set(
+      "X-Goog-FieldMask",
+      "places.displayName,places.formattedAddress,places.location,places.rating,places.photos,places.currentOpeningHours,places.internationalPhoneNumber,places.id"
+    );
+
     const response = await fetch(url, {
       method: "POST",
-      // @ts-ignore
-      headers: {
-        "Content-Type": "application/json",
-        "X-Goog-Api-Key": this.apiKey,
-        "X-Goog-FieldMask":
-          "places.displayName,places.formattedAddress,places.location,places.rating,places.photos,places.currentOpeningHours,places.internationalPhoneNumber,places.id",
-      },
+      headers: requestHeaders,
       body: body,
     });
 
@@ -89,15 +91,17 @@ export class Service implements ServiceInterface {
 
   async searchById({ placeId }: { placeId: string }): Promise<PlaceResult> {
     const url = `${this.baseUrl}/v1/places/${placeId}`;
+    const requestHeaders = new Headers();
+    requestHeaders.set("Content-Type", "application/json");
+    requestHeaders.set("X-Goog-Api-Key", this.apiKey);
+    requestHeaders.set(
+      "X-Goog-FieldMask",
+      "id,displayName,photos,formattedAddress,rating,internationalPhoneNumber,currentOpeningHours"
+    );
+
     const response = await fetch(url, {
       method: "GET",
-      // @ts-ignore
-      headers: {
-        "Content-Type": "application/json",
-        "X-Goog-Api-Key": this.apiKey, 
-        "X-Goog-FieldMask":
-          "id,displayName,photos,formattedAddress,rating,internationalPhoneNumber,currentOpeningHours",
-      },
+      headers: requestHeaders,
     });
 
     if (!response.ok) {

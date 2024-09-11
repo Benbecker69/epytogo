@@ -8,6 +8,7 @@ import { useNavigation } from "@/hooks/useNavigation";
 import { Service } from "@/services/Service";
 import { PlaceResult } from "@/services/ServiceInterface";
 import { useStore } from "@/store/useStore";
+import { useQuery } from "@tanstack/react-query";
 import { Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
@@ -17,10 +18,6 @@ import { SkeletonCard } from "./SkeletonCard";
 export const Home = () => {
   const { navItemsHomePage } = useNavigation();
   const [query, setQuery] = useState("");
-  const [places, setPlaces] = useState<PlaceResult[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
   const { itemId } = useStore();
   const router = useRouter();
 
@@ -30,37 +27,29 @@ export const Home = () => {
   );
 
   const fetchPlaces = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      let results;
-
-      if (itemId === "restaurant") {
-        results = await service.searchRestaurants({
-          name: query,
-        });
-      } else if (itemId === "hotel") {
-        results = await service.searchHotels({
-          name: query,
-        });
-      } else {
-        results = await service.searchRestaurantsAndHotels({
-          name: query,
-        });
-      }
-
-      setPlaces(results);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Erreur inconnue.");
-    } finally {
-      setLoading(false);
+    if (itemId === "restaurant") {
+      return service.searchRestaurants({ name: query });
+    } else if (itemId === "hotel") {
+      return service.searchHotels({ name: query });
+    } else {
+      return service.searchRestaurantsAndHotels({ name: query });
     }
   }, [itemId, query, service]);
 
+  const {
+    data: places = [],
+    error,
+    isLoading,
+    refetch,
+  } = useQuery<PlaceResult[], Error>({
+    queryKey: ["places", query, itemId],
+    queryFn: fetchPlaces,
+    enabled: false,
+  });
+
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    fetchPlaces();
+    refetch();
   };
 
   const handlePlaceClick = (placeId: string) => {
@@ -68,13 +57,16 @@ export const Home = () => {
   };
 
   useEffect(() => {
-    fetchPlaces();
-  }, [fetchPlaces, itemId]);
+    refetch();
+  }, [refetch, itemId]);
 
   return (
     <Container>
       <div className="mx-auto flex w-full max-w-4xl flex-col justify-center px-4 md:px-0">
-        <Title className="mb-4 text-center text-2xl md:text-3xl font-bold" tag="h1">
+        <Title
+          className="mb-4 text-center text-2xl md:text-3xl font-bold"
+          tag="h1"
+        >
           Découvrez Les Meilleurs Endroits
         </Title>
         <Navigation navItems={navItemsHomePage} />
@@ -97,9 +89,9 @@ export const Home = () => {
           </Button>
         </form>
       </div>
-      {error && <p className="mt-4 text-center text-red-500">{error}</p>}
+      {error && <p className="mt-4 text-center text-red-500">{error.message}</p>}
       <div className="mt-10 grid gap-6 px-4 md:px-10 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-        {loading
+        {isLoading
           ? Array.from({ length: 3 }).map((_, index) => (
               <SkeletonCard key={index} className="h-[300px] w-full" />
             ))
