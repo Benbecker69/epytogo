@@ -1,13 +1,13 @@
 import { cn } from "@/lib/utils";
 import { useStore } from "@/store/useStore";
-import { NavItem } from "./types";
 import { Tooltip } from "../ui/tooltip";
+import { NavItem } from "./types";
 
 export const Navigation = ({ navItems }: { navItems: NavItem[] }) => {
   const { itemId } = useStore();
 
   return (
-    <nav className="flex justify-center gap-4">
+    <nav className="flex justify-center gap-2 flex-wrap">
       {navItems?.map((item) => (
         <>
           {item.tooltip ? (
@@ -15,7 +15,7 @@ export const Navigation = ({ navItems }: { navItems: NavItem[] }) => {
               <button
                 key={item.id}
                 className={cn(
-                  "flex cursor-pointer items-center gap-1 hover:opacity-80",
+                  "flex cursor-pointer items-center gap-1 hover:opacity-80 p-2 md:p-3 rounded-md",
                   { "text-sky-600": item.id === itemId },
                 )}
                 type="button"
@@ -28,14 +28,14 @@ export const Navigation = ({ navItems }: { navItems: NavItem[] }) => {
             <button
               key={item.id}
               className={cn(
-                "flex cursor-pointer items-center gap-1 hover:opacity-80",
+                "flex cursor-pointer items-center gap-1 hover:opacity-80 p-2 md:p-3 rounded-md",
                 { "text-sky-600": item.id === itemId },
               )}
               type="button"
               onClick={item.handleClick}
             >
               {item.icon}
-              <p className="font-semibold tracking-tight"> {item.name}</p>
+              <p className="hidden md:inline font-semibold tracking-tight"> {item.name}</p>
             </button>
           )}
         </>

@@ -25,26 +25,28 @@ export const CustomCard = ({
     <Card
       key={place.placeId}
       className={cn(
-        "relative flex cursor-pointer justify-center border-none shadow-none transition-opacity hover:opacity-90",
+        "relative flex flex-col cursor-pointer border-none shadow-lg transition-opacity hover:opacity-90 rounded-lg overflow-hidden",
         className
       )}
       onClick={onClick}
     >
-      <CardTitle className="absolute bottom-24 z-10 text-3xl text-white drop-shadow-lg">
-        {place.name}
-      </CardTitle>
-      <Image
-        alt={place.name}
-        className="h-[360px] w-full rounded-md object-cover"
-        src={photoUrl}
-        width={500}
-        height={360}
-      />
-      <CardContent className="absolute bottom-0 flex w-full flex-col justify-between bg-white/90 py-4">
-        <p className="font-semibold line-clamp-2">{place.address}</p>
+      <div className="relative w-full h-64 md:h-72 lg:h-80">
+        <Image
+          alt={place.name}
+          className="w-full h-full object-cover"
+          src={photoUrl}
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        />
+        <CardTitle className="absolute bottom-4 left-4 text-xl md:text-2xl lg:text-3xl text-white drop-shadow-lg bg-black/60 p-2 rounded-md">
+          {place.name}
+        </CardTitle>
+      </div>
+      <CardContent className="flex flex-col justify-between p-4 bg-white">
+        <p className="text-base md:text-lg lg:text-xl font-semibold line-clamp-2">{place.address}</p>
         <div className="mt-2 flex items-center">
           <Star className="mr-1 h-5 w-5 fill-yellow-400 text-yellow-400" />
-          <span className="font-bold">{place.rating.toFixed(1)}</span>
+          <span className="text-base md:text-lg lg:text-xl font-bold">{place.rating.toFixed(1)}</span>
         </div>
       </CardContent>
     </Card>

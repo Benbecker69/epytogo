@@ -50,8 +50,6 @@ export const Home = () => {
         });
       }
 
-      console.log(results);
-
       setPlaces(results);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erreur inconnue.");
@@ -75,23 +73,23 @@ export const Home = () => {
 
   return (
     <Container>
-      <div className="mx-auto flex w-3/6 flex-col justify-center">
-        <Title className="mb-4 text-center text-3xl font-bold" tag="h1">
+      <div className="mx-auto flex w-full max-w-4xl flex-col justify-center px-4 md:px-0">
+        <Title className="mb-4 text-center text-2xl md:text-3xl font-bold" tag="h1">
           Découvrez Les Meilleurs Endroits
         </Title>
         <Navigation navItems={navItemsHomePage} />
         <form className="relative mt-4 flex w-full" onSubmit={handleSubmit}>
           <input
-            className="h-11 w-full rounded-full border border-sky-600 px-10 outline-none"
+            className="h-11 w-full rounded-full border border-sky-600 px-10 pr-20 outline-none"
             name="search"
-            placeholder="Rechercher un restaurant..."
+            placeholder="Rechercher un endroit..."
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
           <Search
-            className="absolute bottom-1.5 left-3 -translate-y-1/2"
-            size={16}
+            className="absolute left-4 top-1/2 transform -translate-y-1/2"
+            size={20}
           />
 
           <Button className="absolute right-0 h-11 rounded-l-none rounded-r-full">
@@ -100,15 +98,15 @@ export const Home = () => {
         </form>
       </div>
       {error && <p className="mt-4 text-center text-red-500">{error}</p>}
-      <div className="mt-10 grid grid-cols-3 gap-10 px-10">
+      <div className="mt-10 grid gap-6 px-4 md:px-10 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         {loading
           ? Array.from({ length: 3 }).map((_, index) => (
-              <SkeletonCard key={index} className="h-[300px] w-[380px]" />
+              <SkeletonCard key={index} className="h-[300px] w-full" />
             ))
           : places.map((place) => (
               <CustomCard
                 key={place.id}
-                className="min-h-[300px] w-[380px]"
+                className="min-h-[300px] w-full"
                 place={{
                   placeId: place.id,
                   name: place.displayName.text,
